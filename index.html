@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SeaBird≡ Tech & Data — Plateforme de workflows IA pour la finance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              DEFAULT: '#0C1B3A',
+              deep: '#080F22',
+              light: '#122248',
+              mid: '#1A2F58',
+            },
+            red: {
+              DEFAULT: '#E63946',
+              dark: '#C42D39',
+              light: '#FF4D5A',
+            },
+            teal: {
+              DEFAULT: '#14B8A6',
+              light: '#2DD4BF',
+              dark: '#0D9488',
+            },
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #080F22; }
+    ::-webkit-scrollbar-thumb { background: #E63946; border-radius: 3px; }
+
+    /* Red arrow connector */
+    .arrow-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .arrow-connector::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: #E63946;
+      position: relative;
+    }
+    .arrow-connector::before {
+      content: '▶';
+      color: #E63946;
+      font-size: 20px;
+      position: absolute;
+      margin-left: 32px;
+    }
+
+    /* Gradient line on hero */
+    .hero-line {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #E63946, #FF4D5A);
+      border-radius: 2px;
+    }
+
+    /* Layer bar gradient */
+    .layer-bar {
+      transition: transform 0.2s ease;
+    }
+    .layer-bar:hover {
+      transform: translateX(8px);
+    }
+
+    /* Card hover */
+    .use-case-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .use-case-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(12,27,58,0.15);
+    }
+
+    /* Diagram block */
+    .diagram-block {
+      position: relative;
+    }
+
+    /* Pill */
+    .flow-pill {
+      border: 2px solid rgba(230, 57, 70, 0.3);
+      background: rgba(230, 57, 70, 0.06);
+    }
+
+    /* Stats number */
+    .stat-number {
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    /* Section divider */
+    .section-divider {
+      width: 60px;
+      height: 3px;
+      background: #E63946;
+      border-radius: 2px;
+    }
+
+    /* Sub-element card inside diagram */
+    .agent-sub {
+      border-left: 3px solid #E63946;
+      padding-left: 12px;
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Architecture annotation */
+    .annotation-text {
+      writing-mode: horizontal-tb;
+    }
+
+    /* Badge pulse for active */
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .badge-active {
+      animation: pulse-red 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+
+  <!-- ========================================
+       HEADER / NAV
+  ======================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-navy-deep/95 backdrop-blur-sm border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <span class="text-white font-bold text-2xl tracking-tight leading-none">
+          SeaBird<span class="text-red">≡</span>
+        </span>
+        <span class="text-teal text-xs font-medium tracking-widest uppercase border border-teal/30 px-2 py-0.5 rounded">Tech &amp; Data</span>
+      </div>
+      <!-- Right nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#processus" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Plateforme</a>
+        <a href="#cas-usage" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Cas d'usage</a>
+        <a href="#architecture" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Architecture</a>
+        <a href="mailto:contact@seabirdconseil.com" class="bg-red hover:bg-red-dark text-white text-sm font-semibold px-5 py-2.5 rounded transition-colors">
+          Nous contacter
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================
+       SECTION 1: HERO
+  ======================================== -->
+  <section class="min-h-screen bg-navy flex flex-col justify-center pt-24 pb-20 relative overflow-hidden">
+    <!-- Background texture -->
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 20% 50%, #14B8A6 0%, transparent 50%), radial-gradient(circle at 80% 20%, #E63946 0%, transparent 40%)"></div>
+    <!-- Grid pattern -->
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px); background-size: 60px 60px;"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <!-- Tag line -->
+      <div class="flex items-center gap-3 mb-10">
+        <div class="hero-line"></div>
+        <span class="text-teal text-sm font-semibold tracking-widest uppercase">Plateforme IA · Secteur financier</span>
+      </div>
+
+      <!-- Main heading -->
+      <h1 class="text-white font-black leading-[1.05] mb-8" style="font-size: clamp(2.8rem, 6vw, 4.5rem); max-width: 820px;">
+        Automatisez vos<br />
+        <span class="text-red">workflows métier</span><br />
+        avec des agents IA experts
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-white/65 font-light mb-14 leading-relaxed" style="font-size: clamp(1rem, 2vw, 1.25rem); max-width: 640px;">
+        Comptabilité, contrôle de gestion, gestion d'actifs, conformité — un moteur intelligent paramétrable par vos équipes métier.
+      </p>
+
+      <!-- 3 Flow Pills -->
+      <div class="flex flex-wrap items-center gap-4 mb-16">
+        <!-- Pill 1 -->
+        <div class="flow-pill rounded-lg px-6 py-4 text-center min-w-[160px]">
+          <div class="text-teal text-xs font-bold tracking-widest uppercase mb-1">Entrée</div>
+          <div class="text-white font-bold text-base">DONNÉES MÉTIER</div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="flex items-center">
+          <div class="w-8 h-px bg-red/60"></div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-red">
+            <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Pill 2 -->
+        <div class="flow-pill rounded-lg px-6 py-4 text-center min-w-[180px]" style="border-color: rgba(230,57,70,0.6); background: rgba(230,57,70,0.1);">
+          <div class="text-red text-xs font-bold tracking-widest uppercase mb-1">Transformation</div>
+          <div class="text-white font-bold text-base">AGENTS EXPERTS</div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="flex items-center">
+          <div class="w-8 h-px bg-red/60"></div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-red">
+            <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Pill 3 -->
+        <div class="flow-pill rounded-lg px-6 py-4 text-center min-w-[180px]">
+          <div class="text-teal text-xs font-bold tracking-widest uppercase mb-1">Sortie</div>
+          <div class="text-white font-bold text-base">RÉSULTATS ACTIONNABLES</div>
+        </div>
+      </div>
+
+      <!-- CTA row -->
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#processus" class="bg-red hover:bg-red-dark text-white font-semibold px-8 py-4 rounded transition-colors text-sm tracking-wide">
+          Découvrir la plateforme
+        </a>
+        <a href="#cas-usage" class="text-white/70 hover:text-white border border-white/20 hover:border-white/40 font-medium px-8 py-4 rounded transition-colors text-sm tracking-wide">
+          Voir les cas d'usage →
+        </a>
+      </div>
+    </div>
+
+    <!-- Decorative element -->
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red/30 to-transparent"></div>
+  </section>
+
+  <!-- ========================================
+       SECTION 2: UN MOTEUR, TOUS VOS PROCESSUS
+  ======================================== -->
+  <section id="processus" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <div class="section-divider mx-auto mb-6"></div>
+        <h2 class="text-navy font-black mb-6" style="font-size: clamp(2rem, 4vw, 3rem);">
+          Un moteur, tous vos processus financiers
+        </h2>
+        <p class="text-gray-500 font-light leading-relaxed max-w-2xl mx-auto" style="font-size: clamp(0.95rem, 1.5vw, 1.1rem);">
+          Chaque processus financier suit le même schéma : des données entrent, une expertise métier les transforme, un résultat auditable en sort. Notre plateforme industrialise ce schéma.
+        </p>
+      </div>
+
+      <!-- CORE DIAGRAM -->
+      <div class="mt-16">
+        <!-- Desktop layout -->
+        <div class="hidden lg:flex items-stretch gap-0 relative">
+
+          <!-- Block 1: DONNÉES D'ENTRÉE -->
+          <div class="flex-1 diagram-block">
+            <div class="h-full border-2 border-navy rounded-2xl p-8 bg-white relative">
+              <div class="absolute -top-4 left-6 bg-white px-3">
+                <span class="text-navy text-xs font-bold tracking-widest uppercase">01</span>
+              </div>
+              <h3 class="text-navy font-bold text-lg mb-2 uppercase tracking-wide">Données d'entrée</h3>
+              <div class="w-8 h-0.5 bg-red mb-6"></div>
+              <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-teal mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Contrats et baux</div>
+                    <div class="text-gray-400 text-xs mt-0.5">PDF, scans, documents</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-teal mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Portefeuilles d'actifs</div>
+                    <div class="text-gray-400 text-xs mt-0.5">Flux SWIFT, Bloomberg</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-teal mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">États financiers et balances</div>
+                    <div class="text-gray-400 text-xs mt-0.5">FEC, fichiers comptables</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-teal mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Données réglementaires</div>
+                    <div class="text-gray-400 text-xs mt-0.5">Référentiels AMF, ACPR</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Arrow 1 -->
+          <div class="flex flex-col items-center justify-center px-3 flex-shrink-0">
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-px h-16 bg-gradient-to-b from-transparent via-red/40 to-red"></div>
+              <div class="w-10 h-px bg-red"></div>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-red -mt-1">
+                <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="w-px h-16 bg-gradient-to-b from-red via-red/40 to-transparent"></div>
+            </div>
+          </div>
+
+          <!-- Block 2: AGENTS IA (CENTER, LARGEST) -->
+          <div class="flex-[1.4] diagram-block">
+            <div class="h-full rounded-2xl p-8 bg-navy relative overflow-hidden">
+              <!-- Background decoration -->
+              <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 50% 0%, #E63946 0%, transparent 60%)"></div>
+              
+              <div class="absolute -top-4 left-6 bg-navy px-3">
+                <span class="text-red text-xs font-bold tracking-widest uppercase">02</span>
+              </div>
+              <h3 class="text-white font-bold text-lg mb-2 uppercase tracking-wide">Agents IA configurables</h3>
+              <div class="w-8 h-0.5 bg-red mb-6"></div>
+
+              <div class="space-y-5 relative z-10">
+                <!-- Sub: Connaissances -->
+                <div class="agent-sub">
+                  <div class="flex items-center gap-2 mb-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-teal flex-shrink-0">
+                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-teal text-xs font-bold tracking-wider uppercase">Base de connaissances</span>
+                  </div>
+                  <p class="text-white/70 text-sm">Normes IFRS, réglementation AMF/ACPR, politiques groupe</p>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-white/10"></div>
+
+                <!-- Sub: Règles -->
+                <div class="agent-sub">
+                  <div class="flex items-center gap-2 mb-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-teal flex-shrink-0">
+                      <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-teal text-xs font-bold tracking-wider uppercase">Règles paramétrables</span>
+                  </div>
+                  <p class="text-white/70 text-sm">Mode opératoire concret, formules, critères de validation</p>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-white/10"></div>
+
+                <!-- Sub: Instructions -->
+                <div class="agent-sub">
+                  <div class="flex items-center gap-2 mb-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-teal flex-shrink-0">
+                      <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-teal text-xs font-bold tracking-wider uppercase">Instructions de traitement</span>
+                  </div>
+                  <p class="text-white/70 text-sm">Ce que l'agent doit faire, pas juste un label</p>
+                </div>
+              </div>
+
+              <!-- Bottom note -->
+              <div class="mt-6 pt-5 border-t border-white/10">
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-red flex-shrink-0"></div>
+                  <p class="text-white/50 text-xs italic">Configuré par l'administrateur métier, pas par un développeur</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow 2 -->
+          <div class="flex flex-col items-center justify-center px-3 flex-shrink-0">
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-px h-16 bg-gradient-to-b from-transparent via-red/40 to-red"></div>
+              <div class="w-10 h-px bg-red"></div>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-red -mt-1">
+                <path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="w-px h-16 bg-gradient-to-b from-red via-red/40 to-transparent"></div>
+            </div>
+          </div>
+
+          <!-- Block 3: OUTPUTS MÉTIER -->
+          <div class="flex-1 diagram-block">
+            <div class="h-full border-2 border-navy rounded-2xl p-8 bg-white relative">
+              <div class="absolute -top-4 left-6 bg-white px-3">
+                <span class="text-navy text-xs font-bold tracking-widest uppercase">03</span>
+              </div>
+              <h3 class="text-navy font-bold text-lg mb-2 uppercase tracking-wide">Outputs métier</h3>
+              <div class="w-8 h-0.5 bg-red mb-6"></div>
+              <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-red mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Écritures comptables</div>
+                    <div class="text-gray-400 text-xs mt-0.5">PCG, FEC</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-red mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Tableaux d'amortissement</div>
+                    <div class="text-gray-400 text-xs mt-0.5">Calcul automatisé IFRS 16</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-red mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Rapports de conformité</div>
+                    <div class="text-gray-400 text-xs mt-0.5">Alertes et contrôles qualité</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full bg-red mt-1.5 flex-shrink-0"></div>
+                  <div>
+                    <div class="text-navy font-semibold text-sm">Exports ERP</div>
+                    <div class="text-gray-400 text-xs mt-0.5">SAP, Oracle, Sage</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile layout (stacked) -->
+        <div class="flex flex-col gap-4 lg:hidden">
+          <!-- Block 1 -->
+          <div class="border-2 border-navy rounded-2xl p-6 bg-white">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-xs font-bold text-navy tracking-widest uppercase bg-gray-100 px-2 py-0.5 rounded">01</span>
+              <h3 class="text-navy font-bold text-base uppercase tracking-wide">Données d'entrée</h3>
+            </div>
+            <ul class="space-y-3">
+              <li class="text-sm text-gray-600">📄 Contrats et baux (PDF, scans)</li>
+              <li class="text-sm text-gray-600">📊 Portefeuilles d'actifs (flux SWIFT, Bloomberg)</li>
+              <li class="text-sm text-gray-600">🧾 États financiers et balances</li>
+              <li class="text-sm text-gray-600">⚖️ Données réglementaires</li>
+            </ul>
+          </div>
+          <!-- Arrow down -->
+          <div class="flex justify-center">
+            <svg width="24" height="32" viewBox="0 0 24 32" fill="none" class="text-red">
+              <path d="M12 0v28M4 20l8 10 8-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <!-- Block 2 -->
+          <div class="rounded-2xl p-6 bg-navy">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-xs font-bold text-red tracking-widest uppercase border border-red/30 px-2 py-0.5 rounded">02</span>
+              <h3 class="text-white font-bold text-base uppercase tracking-wide">Agents IA configurables</h3>
+            </div>
+            <div class="space-y-4">
+              <div class="agent-sub"><span class="text-teal text-xs font-bold uppercase">Base de connaissances</span><p class="text-white/70 text-sm mt-1">Normes IFRS, réglementation AMF/ACPR, politiques groupe</p></div>
+              <div class="agent-sub"><span class="text-teal text-xs font-bold uppercase">Règles paramétrables</span><p class="text-white/70 text-sm mt-1">Mode opératoire concret, formules, critères de validation</p></div>
+              <div class="agent-sub"><span class="text-teal text-xs font-bold uppercase">Instructions de traitement</span><p class="text-white/70 text-sm mt-1">Ce que l'agent doit faire, pas juste un label</p></div>
+            </div>
+          </div>
+          <!-- Arrow down -->
+          <div class="flex justify-center">
+            <svg width="24" height="32" viewBox="0 0 24 32" fill="none" class="text-red">
+              <path d="M12 0v28M4 20l8 10 8-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <!-- Block 3 -->
+          <div class="border-2 border-navy rounded-2xl p-6 bg-white">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-xs font-bold text-navy tracking-widest uppercase bg-gray-100 px-2 py-0.5 rounded">03</span>
+              <h3 class="text-navy font-bold text-base uppercase tracking-wide">Outputs métier</h3>
+            </div>
+            <ul class="space-y-3">
+              <li class="text-sm text-gray-600">📝 Écritures comptables (PCG, FEC)</li>
+              <li class="text-sm text-gray-600">📈 Tableaux d'amortissement</li>
+              <li class="text-sm text-gray-600">✅ Rapports de conformité &amp; alertes</li>
+              <li class="text-sm text-gray-600">🔗 Exports ERP (SAP, Oracle, Sage)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom label -->
+        <div class="mt-10 text-center">
+          <span class="text-gray-400 text-sm font-medium">De l'input à l'output — traçable, paramétrable, auditable</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 3: CAS D'USAGE
+  ======================================== -->
+  <section id="cas-usage" class="py-24" style="background: #F4F6FA;">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <div class="section-divider mx-auto mb-6"></div>
+        <h2 class="text-navy font-black mb-4" style="font-size: clamp(2rem, 4vw, 3rem);">
+          Cas d'usage
+        </h2>
+        <p class="text-navy font-bold text-xl">Déjà opérationnel. Bientôt partout.</p>
+        <p class="text-gray-500 mt-3 max-w-xl mx-auto text-sm">Chaque cas d'usage est un workflow complet, de l'extraction des données à la production des livrables métier.</p>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Card 1: IFRS 16 — ACTIVE -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-red"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl bg-red/10 flex items-center justify-center flex-shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-red">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="badge-active bg-red text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wide">
+                ● Opérationnel
+              </span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">IFRS 16 — Contrats de location</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Extraction, classification, calcul du passif locatif, écritures PCG. 7 agents, 23 règles, traitement de bout en bout.</p>
+            <div class="mt-6 flex items-center gap-4">
+              <div class="text-center">
+                <div class="text-navy font-black text-2xl">7</div>
+                <div class="text-gray-400 text-xs">agents</div>
+              </div>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="text-center">
+                <div class="text-navy font-black text-2xl">23</div>
+                <div class="text-gray-400 text-xs">règles</div>
+              </div>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="text-center">
+                <div class="text-navy font-black text-2xl">100%</div>
+                <div class="text-gray-400 text-xs">bout en bout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Consolidation groupe -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-navy-light"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl bg-navy/8 flex items-center justify-center flex-shrink-0" style="background: rgba(12,27,58,0.06);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-navy">
+                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-gray-500 bg-gray-100 text-xs font-semibold px-3 py-1.5 rounded-full">Prochainement</span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">Consolidation groupe</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Agrégation des balances filiales, éliminations intragroupe, réconciliation automatique, reporting IFRS.</p>
+          </div>
+        </div>
+
+        <!-- Card 3: Contrôle des charges -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-navy-light"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(12,27,58,0.06);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-navy">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-gray-500 bg-gray-100 text-xs font-semibold px-3 py-1.5 rounded-full">Prochainement</span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">Contrôle des charges</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Rapprochement factures/contrats, détection d'anomalies, validation automatique des engagements.</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Gestion d'actifs -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-navy-light"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(20,184,166,0.08);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal">
+                  <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-gray-500 bg-gray-100 text-xs font-semibold px-3 py-1.5 rounded-full">Prochainement</span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">Gestion d'actifs — Valorisation</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Traitement des flux portefeuille, pricing, calcul de NAV, réconciliation dépositaire.</p>
+          </div>
+        </div>
+
+        <!-- Card 5: Conformité réglementaire -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-navy-light"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(12,27,58,0.06);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-navy">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-gray-500 bg-gray-100 text-xs font-semibold px-3 py-1.5 rounded-full">Prochainement</span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">Conformité réglementaire</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Veille réglementaire automatisée, contrôles ACPR/AMF, génération des reportings obligatoires.</p>
+          </div>
+        </div>
+
+        <!-- Card 6: Due diligence -->
+        <div class="use-case-card bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="h-1.5 bg-navy-light"></div>
+          <div class="p-8">
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(12,27,58,0.06);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-navy">
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="text-gray-500 bg-gray-100 text-xs font-semibold px-3 py-1.5 rounded-full">Prochainement</span>
+            </div>
+            <h3 class="text-navy font-bold text-lg mb-3">Due diligence financière</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Analyse automatisée des états financiers, identification des zones de risque, scoring qualité.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 4: L'ARCHITECTURE
+  ======================================== -->
+  <section id="architecture" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Header -->
+      <div class="mb-16">
+        <div class="section-divider mb-6"></div>
+        <h2 class="text-navy font-black mb-4" style="font-size: clamp(2rem, 4vw, 3rem);">
+          L'architecture
+        </h2>
+        <p class="text-red font-bold text-2xl">4 couches. 0 ligne de code.</p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-12 items-start">
+        <!-- Left: Stacked bars -->
+        <div class="flex-1 space-y-3">
+
+          <!-- Layer 4: TOP — Workflows (red accent) -->
+          <div class="layer-bar rounded-xl p-6 flex items-center gap-5" style="background: linear-gradient(135deg, #E63946 0%, #C42D39 100%);">
+            <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-white">
+                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-white/60 text-xs font-bold tracking-widest uppercase">Couche 4</span>
+              </div>
+              <div class="text-white font-black text-xl mb-1">Workflows</div>
+              <div class="text-white/75 text-sm">Pipelines d'agents orchestrés, configurables par l'administrateur métier</div>
+            </div>
+          </div>
+
+          <!-- Layer 3: Agents & Règles (navy) -->
+          <div class="layer-bar rounded-xl p-6 flex items-center gap-5 bg-navy">
+            <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-white">
+                <path d="M12 2a10 10 0 110 20 10 10 0 010-20zM2 12h3M19 12h3M12 5v3M12 16v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-white/50 text-xs font-bold tracking-widest uppercase mb-1">Couche 3</div>
+              <div class="text-white font-black text-xl mb-1">Agents & Règles</div>
+              <div class="text-white/65 text-sm">Agents IA spécialisés avec des règles paramétrables et des instructions concrètes</div>
+            </div>
+          </div>
+
+          <!-- Layer 2: Connaissances (teal) -->
+          <div class="layer-bar rounded-xl p-6 flex items-center gap-5" style="background: #14B8A6;">
+            <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-white">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5V5a2 2 0 012-2h12a2 2 0 012 2v10H6.5A2.5 2.5 0 004 17v2.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Couche 2</div>
+              <div class="text-white font-black text-xl mb-1">Connaissances</div>
+              <div class="text-white/80 text-sm">Normes, réglementations, politiques internes, expertise métier</div>
+            </div>
+          </div>
+
+          <!-- Layer 1: BOTTOM — Données (gray) -->
+          <div class="layer-bar rounded-xl p-6 flex items-center gap-5 bg-gray-100 border-2 border-gray-200">
+            <div class="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-gray-500">
+                <ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-gray-400 text-xs font-bold tracking-widest uppercase mb-1">Couche 1</div>
+              <div class="text-gray-700 font-black text-xl mb-1">Données</div>
+              <div class="text-gray-500 text-sm">Vos documents, fichiers et flux de données métier</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Annotation -->
+        <div class="lg:w-72 flex-shrink-0">
+          <div class="bg-navy rounded-2xl p-8 sticky top-28">
+            <div class="text-white/40 text-xs font-bold tracking-widest uppercase mb-4">Principes de fonctionnement</div>
+            
+            <div class="space-y-6">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gray-700/50 flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">1</span>
+                </div>
+                <div>
+                  <div class="text-white font-bold text-sm mb-1">L'administrateur configure</div>
+                  <div class="text-white/50 text-xs leading-relaxed">Règles, instructions et connaissances paramétrées par les équipes métier</div>
+                </div>
+              </div>
+
+              <div class="w-px h-4 bg-red/40 ml-4"></div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-red/20 flex items-center justify-center flex-shrink-0">
+                  <span class="text-red font-bold text-sm">2</span>
+                </div>
+                <div>
+                  <div class="text-white font-bold text-sm mb-1">Les agents exécutent</div>
+                  <div class="text-white/50 text-xs leading-relaxed">Traitement automatisé des workflows de bout en bout</div>
+                </div>
+              </div>
+
+              <div class="w-px h-4 bg-red/40 ml-4"></div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-teal/20 flex items-center justify-center flex-shrink-0">
+                  <span class="text-teal font-bold text-sm">3</span>
+                </div>
+                <div>
+                  <div class="text-white font-bold text-sm mb-1">L'humain contrôle</div>
+                  <div class="text-white/50 text-xs leading-relaxed">Chaque décision est traçable, auditable et révisable</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tagline bar -->
+            <div class="mt-8 pt-6 border-t border-white/10">
+              <p class="text-white/60 text-xs italic text-center leading-relaxed">
+                "L'administrateur configure → Les agents exécutent → L'humain contrôle"
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 5: LA PROMESSE SEABIRD
+  ======================================== -->
+  <section class="py-28 bg-navy relative overflow-hidden">
+    <!-- Background -->
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 30% 70%, #14B8A6 0%, transparent 50%), radial-gradient(circle at 70% 30%, #E63946 0%, transparent 50%)"></div>
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 80px 80px;"></div>
+
+    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+      <!-- Eyebrow -->
+      <div class="flex items-center justify-center gap-3 mb-10">
+        <div class="w-12 h-px bg-red/50"></div>
+        <span class="text-red text-sm font-bold tracking-widest uppercase">La promesse SeaBird</span>
+        <div class="w-12 h-px bg-red/50"></div>
+      </div>
+
+      <!-- Big tagline -->
+      <h2 class="text-white font-black leading-tight mb-8" style="font-size: clamp(2.2rem, 5vw, 4rem);">
+        La pratique stratégique,<br />
+        <span class="text-red">la vision opérationnelle.</span>
+      </h2>
+
+      <!-- Subtitle -->
+      <p class="text-white/60 font-light leading-relaxed mb-20" style="font-size: clamp(1rem, 2vw, 1.2rem); max-width: 680px; margin-left: auto; margin-right: auto;">
+        De l'input à l'output, chaque étape est traçable, paramétrable et contrôlable par vos équipes.
+      </p>
+
+      <!-- 3 Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
+
+        <!-- Stat 1 -->
+        <div class="md:border-r md:border-white/10 px-8">
+          <div class="stat-number text-red font-black mb-3" style="font-size: clamp(4rem, 8vw, 6rem);">100%</div>
+          <div class="text-white font-semibold text-lg mb-2">Traçabilité</div>
+          <div class="text-white/50 text-sm">des décisions prises par les agents</div>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="md:border-r md:border-white/10 px-8">
+          <div class="stat-number text-red font-black mb-3" style="font-size: clamp(4rem, 8vw, 6rem);">0</div>
+          <div class="text-white font-semibold text-lg mb-2">Ligne de code</div>
+          <div class="text-white/50 text-sm">pour créer un workflow métier</div>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="px-8">
+          <div class="stat-number text-red font-black mb-3" style="font-size: clamp(3rem, 6vw, 5rem);">7 étapes</div>
+          <div class="text-white font-semibold text-lg mb-2">De bout en bout</div>
+          <div class="text-white/50 text-sm">pour traiter un bail de A à Z</div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-20">
+        <a href="mailto:contact@seabirdconseil.com" class="inline-flex items-center gap-3 bg-red hover:bg-red-dark text-white font-bold px-10 py-5 rounded-xl transition-colors text-base tracking-wide">
+          Discuter de votre projet
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 9h12M9 3l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FOOTER
+  ======================================== -->
+  <footer style="background: #050C1E;" class="pt-16 pb-10">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Top row -->
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-white font-bold text-2xl tracking-tight">
+              SeaBird<span class="text-red">≡</span>
+            </span>
+            <span class="text-teal text-xs font-medium tracking-widest uppercase border border-teal/30 px-2 py-0.5 rounded">Tech &amp; Data</span>
+          </div>
+          <p class="text-white/40 text-sm max-w-xs">Plateforme de workflows intelligents pour le secteur financier</p>
+        </div>
+
+        <!-- Contact -->
+        <div class="text-right">
+          <a href="mailto:contact@seabirdconseil.com" class="text-white/70 hover:text-white text-sm font-medium transition-colors">
+            contact@seabirdconseil.com
+          </a>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-white/5 pt-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-white/25 text-xs">Document confidentiel — Avril 2026</p>
+          <p class="text-white/20 text-xs">© 2026 SeaBird Conseil. Tous droits réservés.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
